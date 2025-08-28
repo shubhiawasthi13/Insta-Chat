@@ -119,7 +119,7 @@ export const updateProfile = async (req, res) => {
       const fileUri = getDataUri(profile);
       cloudResponse = await cloudinary.uploader.upload(fileUri);
     }
-    const user = await User.findById(userId);
+       let user = await User.findById(userId).select("-password");
     if (!user) {
       return res.status(404).json({
         success: false,
