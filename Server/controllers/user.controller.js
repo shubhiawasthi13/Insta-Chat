@@ -7,7 +7,7 @@ import getDataUri from "../utils/datauri.js";
 export const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    if (username || !email || !password) {
+    if (!username || !email || !password) {
       return res.status(400).json({
         success: false,
         message: "All fields are required.",
@@ -61,7 +61,7 @@ export const login = async (req, res) => {
         message: "incorrect email or password",
       });
     }
-    generateToken(res, user, `Welcome back ${user.name}`);
+    generateToken(res, user, `Welcome back ${user.username}`);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -84,7 +84,7 @@ export const logOut = async (_, res) => {
         success: true,
         message: "Logged out successfully.",
       });
-  }catch (error) {
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
       success: false,
@@ -96,11 +96,11 @@ export const getProfile = async (req, res) => {
   try {
     const userId = req.params.id;
     let user = await User.findById(userId).select("-password");
-    return res.status(500).json({
+    return res.status(200).json({
       user,
       success: true,
     });
-  }catch (error) {
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
       success: false,
@@ -119,7 +119,7 @@ export const updateProfile = async (req, res) => {
       const fileUri = getDataUri(profile);
       cloudResponse = await cloudinary.uploader.upload(fileUri);
     }
-       let user = await User.findById(userId).select("-password");
+    let user = await User.findById(userId).select("-password");
     if (!user) {
       return res.status(404).json({
         success: false,
