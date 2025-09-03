@@ -1,8 +1,8 @@
 import sharp from "sharp";
-import cloudinary from "../utils/cloudinary";
-import { Post } from "../modals/post.model";
-import { User } from "../modals/user.model";
-import { Comment } from "../modals/comment.model";
+import cloudinary from "../utils/cloudinary.js";
+import { Post } from "../modals/post.model.js";
+import { User } from "../modals/user.model.js";
+import { Comment } from "../modals/comment.model.js";
 
 export const addNewPost = async (req, res) => {
   try {

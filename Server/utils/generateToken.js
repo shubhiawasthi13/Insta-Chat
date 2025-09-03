@@ -1,6 +1,16 @@
 import jwt from "jsonwebtoken";
+import { Post } from "../modals/post.model";
 
 export const generateToken = (res, user, message) => {
+  const populatedPost = Promise.all(
+    user.posts.map(async(postId)=>{
+      const post  = await Post.findById(postId);
+      if(post.author.equals(user._id)){
+        return post;
+      }
+      return null;
+    })
+  )
    user = {
         _id:user._id,
         username:user.username,
@@ -9,7 +19,7 @@ export const generateToken = (res, user, message) => {
         bio:user.bio,
         followers:user.followers,
         following:user.following,
-        posts:user.posts
+        posts:populatedPost
     }
   const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
     expiresIn: "1d",
